@@ -1,53 +1,51 @@
 const express = require('express');
 const app = express();
-
 const axios = require("axios");
 
 const PORT = 3000;
-// imprime no terminal 
+
+// Verificar se está rodando
 app.listen(PORT, function(){
     console.log(`O express está rondando na porta ${PORT}`);
 });
-// app.listen(PORT, () => console.log(`O express está rondando na porta ${PORT}`));
 
-// Set the view engine to EJS
+// Definindo view engine para ejs que vai renderizar as views da sua aplicação
+// EJS é uma engine de templates que permite a inclusão de código JavaScript dentro de templates HTML. 
 app.set("view engine", "ejs");
 
-// Serve the public folder as static files
+// Configura o Express para servir arquivos estáticos a partir da pasta "public"
 app.use(express.static("public"));
 
-// Render the index template with default values for dog and error
+// Renderiza a página inicial
 app.get("/", (req, res) => {
   res.render("index", { dog: null, error: null });
 });
 
-// Handle the /dog route
-app.get("/dog", async (req, res) => {
-    // Get the breed from the query parameters
-    const breed = req.query.breed;
-    //const apiKey = "c6af79e25ae6c6d62396d439199274aa";
-  
-    // Add your logic here to fetch dog data from the API
+// Rota chamada quando o usuário aperta o botão e busca uma raça de cachorro
+app.get("/dog", async (req, res) => {    
+    const breed = req.query.breed.toLowerCase();   // Obtem a raça do cachorro digitada pelo usuário    
     const APIUrl = `https://dog.ceo/api/breed/${breed}/images`;
     let dog;
     let error = null;
-    try {
-      const response = await axios.get(APIUrl);
+
+    try{
+      const response = await axios.get(APIUrl); //faz uma requisição GET a API
       dog = response.data;
-      console.log(dog)
-      res.render("index", { dog, error });
+      //console.log(dog)
+      res.render("index", { dog, breed, error }); //envia os dados retornados pela API para a view
     }catch (error) {
-      dog = null;
-      if (error.response.status == 404) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        //console.log(error.response.headers);
-        error = "O cachorro não foi encontrado"; 
-      }else{        
-        error = "Algo deu errado, tente novamente";        
+      console.log(error.response.data);
+      console.log(error.response.status);
+
+      if (error.response) {
+        if (error.response.status === 404) {
+          error = `A raça ${breed} não está listada`; 
+        }else{        
+          error = "Algo deu errado, tente novamente"; 
+        }       
+      }else{
+        error = "Erro na requisição. Tente novamente mais tarde."; 
       }
-      res.render("index", {dog, error });
+      res.render("index", {dog: null, error }); //envia o erro para o usuário na view
     }
-    // Render the index template with the dog data and error message
-    // res.render("index", { dog, error });
 });

@@ -10,18 +10,19 @@
   </head>
   <body>
     <div class="container">
-      <h1>Dog App using NodeJS</h1>
+      <h1>Dog App</h1>
       <form action="/dog" method="get">
-        <input type="text" name="breed" placeholder="Enter dog name" />
-        <button type="submit">Get dog</button>
+        <input type="text" name="breed" placeholder="Digite uma raça" />
+        <button type="submit">Buscar</button>
       </form>
       <% if (error) { %>
       <p class="error"><%= error %></p>
       <% } else if (dog) { %>
       <div class="card">
         <!-- Add your dog data here -->
-        <p>       
-          <img src=" <%=dog.message[1]%>" alt="Descrição da imagem">
+        <p>   
+          <p> Raça: <%=breed%> </p>    
+          <img class="image" src=" <%=dog.message[0]%>" alt="">
         </p>
       </div>
       <% } %>
