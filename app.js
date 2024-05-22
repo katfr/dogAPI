@@ -2,6 +2,7 @@ const express = require('express'); // Importa o módulo Express
 const path = require('path'); // Importa o módulo 'path' para trabalhar com diretórios e caminhos de arquivos
 const app = express(); // Cria uma instância do Express
 const rotas = require('./routes/rotas'); // Importa as rotas definidas em 'routes/index.js'
+const notFoundMiddleware = require('./middlewares/notFound'); // Importa o middleware de tratamento de erro 404
 
 // Middleware para servir arquivos estáticos da pasta 'public'
 app.use(express.static('public'));
@@ -16,9 +17,7 @@ app.engine('html', require('ejs').renderFile); // Configura a view engine para r
 app.use('/', rotas);
 
 // Middleware para tratar erro 404
-app.use((req, res, next) => {
-  res.status(404).render('404', { url: req.url });
-});
+app.use(notFoundMiddleware);
 
 // Inicia o servidor na porta 3000
 app.listen(3000, () => {
