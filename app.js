@@ -1,53 +1,59 @@
 const express = require('express');
 const app = express();
-
 const axios = require("axios");
 
 const PORT = 3000;
-// imprime no terminal 
-app.listen(PORT, function(){
-    console.log(`O express está rondando na porta ${PORT}`);
+
+// Verificar se está rodando
+app.listen(PORT, () => {
+    console.log(`O express está rodando na porta ${PORT}`);
 });
-// app.listen(PORT, () => console.log(`O express está rondando na porta ${PORT}`));
 
-// Set the view engine to EJS
+// Definindo view engine para ejs
 app.set("view engine", "ejs");
+app.set("views", "views"); // Definindo o diretório de views
 
-// Serve the public folder as static files
+// Configura o Express para servir arquivos estáticos a partir da pasta "public"
 app.use(express.static("public"));
 
-// Render the index template with default values for dog and error
-app.get("/", (req, res) => {
-  res.render("index", { dog: null, error: null });
+// Renderiza a página inicial
+app.get("/", async (req, res) => {
+  try {
+    const response = await axios.get('https://dog.ceo/api/breeds/list/all');
+    const breeds = Object.keys(response.data.message);
+    res.render("index", { dog: null, error: null, breeds });
+  } catch (error) {
+    res.render("index", { dog: null, error: 'Erro ao buscar lista de raças', breeds: [] });
+  }
 });
 
-// Handle the /dog route
+// Rota chamada quando o usuário aperta o botão e busca uma raça de cachorro
 app.get("/dog", async (req, res) => {
-    // Get the breed from the query parameters
-    const breed = req.query.breed;
-    //const apiKey = "c6af79e25ae6c6d62396d439199274aa";
-  
-    // Add your logic here to fetch dog data from the API
-    const APIUrl = `https://dog.ceo/api/breed/${breed}/images`;
-    let dog;
-    let error = null;
-    try {
-      const response = await axios.get(APIUrl);
-      dog = response.data;
-      console.log(dog)
-      res.render("index", { dog, error });
-    }catch (error) {
-      dog = null;
-      if (error.response.status == 404) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        //console.log(error.response.headers);
-        error = "O cachorro não foi encontrado"; 
-      }else{        
-        error = "Algo deu errado, tente novamente";        
-      }
-      res.render("index", {dog, error });
+  const selectedBreed = req.query.breed;
+  const customBreed = req.query.customBreed.toLowerCase();
+  const breed = selectedBreed || customBreed;
+  const APIUrl = `https://dog.ceo/api/breed/${breed}/images`;
+  let dog;
+  let error = null;
+  let breeds = [];
+
+  try {
+    const response = await axios.get(APIUrl);
+    const images = response.data.message;
+    const randomImage = images[Math.floor(Math.random() * images.length)];
+    dog = { message: randomImage };
+    const breedsResponse = await axios.get('https://dog.ceo/api/breeds/list/all');
+    breeds = Object.keys(breedsResponse.data.message);
+    res.render("index", { dog, breed, error, breeds });
+  } catch (err) {
+    console.log(err.response ? err.response.data : err.message);
+    if (err.response && err.response.status === 404) {
+      error = `A raça ${breed} não está listada`;
+    } else {
+      error = "Algo deu errado, tente novamente";
     }
-    // Render the index template with the dog data and error message
-    // res.render("index", { dog, error });
+    const breedsResponse = await axios.get('https://dog.ceo/api/breeds/list/all');
+    breeds = Object.keys(breedsResponse.data.message);
+    res.render("index", { dog: null, error, breeds });
+  }
 });
