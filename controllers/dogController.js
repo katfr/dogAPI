@@ -16,6 +16,7 @@ exports.getDogByBreed = async (req, res) => {
         const images = response.data.message; // Extrai as imagens da resposta da API
         const randomImage = images[Math.floor(Math.random() * images.length)]; // Seleciona uma imagem aleatória
         dog = { message: randomImage }; // Cria um objeto 'dog' com a imagem selecionada
+        const breed = req.query.breed;
 
         // Faz uma requisição à API para obter a lista de raças de cachorros
         const breedsResponse = await axios.get('https://dog.ceo/api/breeds/list/all');
@@ -38,7 +39,7 @@ exports.getDogByBreed = async (req, res) => {
         breeds = Object.keys(breedsResponse.data.message); // Extrai as raças da resposta da API
 
         // Renderiza a página inicial ('index') com a mensagem de erro e a lista de raças
-        res.render("index", { dog: null, error, breeds });
+        res.render("index", { dog: null, error, breeds , breed});
     }
 };
 
