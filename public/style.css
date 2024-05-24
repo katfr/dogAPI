@@ -1,37 +1,63 @@
+/* Reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Variáveis CSS para facilitar a manutenção */
+:root {
+  --primary-color: #4caf50;
+  --primary-hover-color: #45a049;
+  --background-gradient: linear-gradient(to right, #a8d86d, #56ab2f);
+  --container-bg: rgba(255, 255, 255, 0.9);
+  --text-color: #333;
+  --error-color: red;
+  --font-family: 'Roboto', sans-serif;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease-in-out;
+}
+
+/* Estilo do body */
 body {
-  font-family: 'Roboto', sans-serif;
-  background: linear-gradient(to right, #a8d86d, #56ab2f); 
-  color: #333;
+  font-family: var(--font-family);
+  background: var(--background-gradient);
+  color: var(--text-color);
   margin: 0;
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
- 
 }
 
+/* Container principal */
 .container {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   text-align: center;
-  background-color: rgba(255, 255, 255, 0.8); 
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: var(--container-bg);
+  border-radius: 12px;
+  box-shadow: var(--box-shadow);
+  transition: var(--transition);
 }
 
+/* Estilo do título */
 h1 {
-  margin-top: 30px;
-  color: #4caf50;
-  font-size: 2.5em;
+  margin-top: 20px;
+  color: var(--primary-color);
+  font-size: 3em;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+/* Formulário */
 form {
   margin-top: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
 }
 
 input[type="text"], select {
@@ -40,49 +66,98 @@ input[type="text"], select {
   border-radius: 8px;
   border: 1px solid #ccc;
   width: 300px;
-  margin-right: 10px;
-  transition: border-color 0.3s;
+  transition: var(--transition);
+  box-shadow: var(--box-shadow);
 }
 
 input[type="text"]:focus, select:focus {
-  border-color: #4caf50;
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 5px var(--primary-color);
 }
 
 button[type="submit"] {
   padding: 12px 25px;
-  background-color: #4caf50;
+  background-color: var(--primary-color);
   color: white;
   border-radius: 8px;
   border: none;
   font-size: 16px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: var(--transition);
+  box-shadow: var(--box-shadow);
 }
 
 button[type="submit"]:hover {
-  background-color: #45a049;
+  background-color: var(--primary-hover-color);
 }
 
+button[type="submit"]:focus {
+  outline: none;
+  box-shadow: 0 0 5px var(--primary-color);
+}
+
+/* Cartão */
 .card {
-  background-color: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: var(--container-bg);
+  box-shadow: var(--box-shadow);
   margin: 30px auto;
   padding: 30px;
-  border-radius: 8px;
+  border-radius: 12px;
+  transition: var(--transition);
 }
 
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Mensagens de loading e erro */
 .loading, .error {
   font-size: 18px;
   margin: 30px 0;
 }
 
 .error {
-  color: red;
+  color: var(--error-color);
 }
 
+/* Imagem do cartão */
 img {
   max-width: 100%;
-  max-height: 40vh; 
-  min-height: 40vh; 
+  max-height: 40vh;
+  min-height: 40vh;
   border-radius: 8px;
+  transition: var(--transition);
+  box-shadow: var(--box-shadow);
+}
+
+img:hover {
+  transform: scale(1.05);
+}
+/* Botão Nova Imagem */
+#new-image-button {
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#new-image-button:hover {
+  background-color: #45a049;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  input[type="text"], select, button[type="submit"] {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  form {
+    flex-direction: column;
+  }
 }

@@ -1,38 +1,64 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Dog App</title>
-    <link rel="stylesheet" type="text/css" href="/style.css" />
-    <link rel="icon" href="https://icones.pro/wp-content/uploads/2021/11/icone-de-chien-assis-vert.png">
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.14.0/css/all.css"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="container">
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dog App</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
+  <link rel="icon" href="https://icones.pro/wp-content/uploads/2021/11/icone-de-chien-assis-vert.png">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.14.0/css/all.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
       <h1><i class="fas fa-dog"></i> Dog App</h1>
-      <form action="dog" method="get">
-        <select name="breed">
-          <option value="">Selecione uma raça</option>
+    </header>
+    <main>
+      
+      <form id="search-form" action="/dog" method="get">
+        <label for="breed-select">Pesquise a raça</label>
+        <input id="custom-breed-input" type="text" name="breed" list="breeds-list" placeholder="Digite ou selecione uma raça" />
+        <datalist id="breeds-list">
           <% breeds.forEach(breed => { %>
-            <option value="<%= breed %>"><%= breed %></option>
+            <option value="<%= breed %>">
           <% }) %>
-        </select>
-        <input type="text" name="customBreed" placeholder="Qual a raça de cachorro ?" />
+        </datalist>
         <button type="submit"><i class="fas fa-paw"></i> Pesquisar</button>
       </form>
+      
       <% if (error) { %>
         <p class="error"><%= error %></p>
       <% } else if (dog) { %>
         <div class="card">
-          <img src="<%= dog.message %>" alt="Dog Image">
+          <img id="dog-image" src="<%= dog.message %>" alt="Imagem de cachorro">
         </div>
+        <button id="new-image-button"><i class="fas fa-sync-alt"></i> Nova Imagem</button>
       <% } %>
-    </div>
-  </body>
+    </main>
+  </div>
+  <script>
+    document.getElementById('new-image-button').addEventListener('click', function() {
+      var selectedBreed = '<%= breed %>';
+      if (selectedBreed) {
+        fetch('/new-dog-image?breed=' + encodeURIComponent(selectedBreed))
+          .then(response => response.json())
+          .then(data => {
+            if (data.message) {
+              var dogImage = document.getElementById('dog-image');
+              dogImage.src = data.message;
+            } else {
+              alert('Não foi possível carregar a nova imagem. Tente novamente.');
+            }
+          })
+          .catch(error => {
+            console.error('Erro ao carregar a nova imagem de cachorro:', error);
+            alert('Ocorreu um erro ao carregar a nova imagem. Tente novamente.');
+          });
+      } else {
+        alert('Por favor, selecione uma raça.');
+      }
+    });
+  </script>
+</body>
 </html>

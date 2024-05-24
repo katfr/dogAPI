@@ -41,3 +41,21 @@ exports.getDogByBreed = async (req, res) => {
         res.render("index", { dog: null, error, breeds });
     }
 };
+
+// Método para buscar uma nova imagem de cachorro da mesma raça
+exports.getNewDogImage = async (req, res) => {
+    const breed = req.query.breed; // Obtém a raça selecionada pelo usuário
+    const APIUrl = `https://dog.ceo/api/breed/${breed}/images/random`; // Monta a URL da API para buscar uma nova imagem da raça
+
+    try {
+        // Faz uma requisição à API para obter uma nova imagem da raça especificada
+        const response = await axios.get(APIUrl);
+        const newDogImage = response.data.message; // Extrai a URL da nova imagem da resposta da API
+
+        // Retorna a URL da nova imagem como resposta
+        res.json({ message: newDogImage });
+    } catch (error) {
+        console.error('Erro ao obter a nova imagem de cachorro:', error);
+        res.status(500).json({ error: 'Erro ao obter a nova imagem de cachorro' });
+    }
+};

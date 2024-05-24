@@ -9,4 +9,7 @@ router.get("/", homeController.renderHomePage);
 // Define a rota para buscar uma raça de cachorro e associa ao método 'getDogByBreed' do 'dogController'
 router.get("/dog", dogController.getDogByBreed);
 
+// Rota para buscar uma nova imagem de cachorro da mesma raça
+router.get('/new-dog-image', dogController.getNewDogImage);
+
 module.exports = router; // Exporta o roteador para ser usado em 'app.js'

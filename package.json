@@ -1,20 +1,16 @@
 {
-  "name": "projeto-rascunho2",
+  "name": "meu_projeto",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "dev": "nodemon app.js"
-    },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "axios": "^1.6.8",
-    "ejs": "^3.1.10",
-    "express": "^4.19.2"
   },
-  "devDependencies": {
-    "nodemon": "^3.1.0"
+  "dependencies": {
+    "axios": "^0.21.1",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1"
   }
 }
+
